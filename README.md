@@ -1,138 +1,257 @@
-# BPOM e-Magang Backend API  
-Sistem backend untuk platform e-Magang BPOM, dibangun menggunakan Laravel 10 dengan arsitektur REST API.  
-Fitur ini mencakup manajemen magang, logbook harian, laporan akhir, project mahasiswa, penilaian pembimbing & kampus, serta event/kegiatan BPOM.
+BPOM E-Magang — REST API Backend (Laravel 11)
 
----
+Backend resmi untuk sistem E-Magang BPOM, digunakan oleh Admin, Pembimbing, dan Mahasiswa dalam mengelola seluruh proses magang mulai dari pendaftaran, bimbingan, logbook, laporan, proyek, penilaian sampai kalender event.
 
-## 🚀 Tech Stack
-- **Laravel 10**
-- **MySQL 8**
-- **Laravel Sanctum (Authentication)**
-- **MVC Architecture**
-- **File Storage (Public Disk)**
+Dibangun menggunakan:
 
----
+Laravel 11
 
-## 📂 Struktur Fitur Utama
+MySQL
 
-### **1. Authentication**
-- Login (role-based: admin, pembimbing, mahasiswa)
-- Logout
-- Get current user (`/me`)
+Sanctum Authentication
 
----
+Clean JSON API Structure
 
-### **2. Formulir Pendaftaran Magang**
-- Public pendaftaran
-- Admin verifikasi / tolak formulir
-- Tracking status oleh peserta
+🚀 Fitur Utama
+1. Formulir & Penerimaan Mahasiswa
 
----
+Mahasiswa daftar magang melalui formulir.
 
-### **3. Manajemen Pembimbing**
-- Admin CRUD pembimbing
-- Lihat mahasiswa bimbingan
-- Filter mahasiswa **aktif / selesai**
+Admin dapat melihat, menerima, atau menolak formulir.
 
----
+2. Manajemen Pembimbing & Divisi
 
-### **4. Mahasiswa**
-- Profil
-- Progress Magang (berdasarkan tanggal mulai-selesai)
-- Absensi otomatis berdasarkan **logbook terverifikasi**
-- Dashboard project & submission
+Admin mengatur divisi.
 
----
+Admin menambah & mengelola akun pembimbing.
 
-### **5. Logbook Harian**
-Mahasiswa:
-- Create logbook harian (PDF/Word)
-- Edit & delete hanya untuk **hari yang sama**
-- Tidak dapat mengubah jika sudah diverifikasi
+3. Data Mahasiswa
 
-Pembimbing:
-- Lihat semua logbook mahasiswa bimbingan
-- Verifikasi logbook
+Profil mahasiswa lengkap.
 
----
+Status aktif / selesai mengikuti magang.
 
-### **6. Laporan Akhir**
-Mahasiswa:
-- Upload laporan akhir (PDF/Word)
-- Replace or delete until verified
-
-Pembimbing:
-- Lihat semua laporan akhir bimbingan
-- Verifikasi / reject + catatan
-
----
-
-### **7. Project Mahasiswa**
-Pembimbing:
-- Membuat project
-- Menambahkan/menghapus/mengganti anggota
-- Update deadline
-- End project (completed/cancelled)
+4. Logbook Harian (Absensi)
 
 Mahasiswa:
-- Melihat project
-- Upload progres pekerjaan
-- Upload final submission (ZIP/PDF/Doc)
+
+Upload logbook harian (PDF/Word)
+
+Edit & hapus hanya di hari yang sama
 
 Pembimbing:
-- Review submission → approve / minta revisi
 
----
+Verifikasi logbook mahasiswa bimbingan
 
-### **8. Project Progress**
+Logbook terverifikasi menghasilkan absensi hadir
+
+5. Laporan Akhir
+
+Mahasiswa upload 1x laporan akhir
+
+Pembimbing dapat verifikasi atau tolak dengan catatan
+
+6. Progress Magang
+
+Progress otomatis berdasarkan tanggal mulai & selesai.
+
+7. Project Management
+
+Pembimbing:
+
+Membuat project (deadline wajib)
+
+Menambah / menghapus / mengganti anggota project
+
+Mengakhiri project lebih cepat
+
+Melihat progress mahasiswa
+
 Mahasiswa:
-- Upload progress harian / mingguan
+
+Melihat daftar project aktif
+
+Upload progress
+
+Upload final submission (zip/pdf/dll)
+
+8. Review Submission Project
 
 Pembimbing:
-- Review & beri komentar progress mahasiswa
 
----
+Approve
 
-### **9. Penilaian Magang**
-Pembimbing dapat memberikan:
-#### **🔹 Penilaian BPOM (0–100)**  
-- Kehadiran  
-- Taat jadwal  
-- Pemahaman materi  
-- Praktek kerja  
-- Komunikasi  
-- Laporan  
-- Presentasi  
+Minta revisi (with notes)
 
-→ Sistem otomatis menghitung **nilai rata-rata (nilai akhir)**.
+9. Penilaian Mahasiswa
 
-#### **🔹 Penilaian Kampus (0–100)**
-- Input nilai final langsung
+Pembimbing dapat mengisi:
 
-#### **Protes Nilai**
-Mahasiswa:
-- Mengajukan protes nilai (bpom/kampus)
+Penilaian BPOM (kehadiran, sikap, pemahaman, praktik, komunikasi, laporan, presentasi)
 
-Pembimbing:
-- Melihat daftar protes nilai
-- Memberi tanggapan
-- Update nilai apabila diperlukan
+Penilaian Kampus (nilai akhir)
 
----
+Mahasiswa dapat:
 
-### **10. Event / Kalender BPOM**
-Admin:
-- Create / update / delete event
+Melihat nilai
 
-Public:
-- Melihat event aktif  
-- Event yang sudah lewat 7 hari otomatis disembunyikan
+Mengajukan protes nilai
 
----
+Pembimbing memberikan tanggapan & resolve
 
-## 📌 Instalasi
+10. Kalender Event (Admin)
 
-### 1️⃣ Clone Repository
-```bash
-git clone https://github.com/USERNAME/bpom-emagang-backend.git
-cd bpom-emagang-backend
+Admin membuat event untuk mahasiswa
+
+Event otomatis berubah status menjadi expired ketika lewat
+
+Menghilang otomatis setelah 7 hari
+
+📦 Instalasi
+1. Clone Repository
+git clone https://github.com/USERNAME/bpom-emagang.git
+cd bpom-emagang
+
+2. Install Dependency
+composer install
+
+3. Copy .env
+cp .env.example .env
+
+
+Edit file .env:
+
+APP_NAME=BPOM_EMAGANG
+APP_KEY=base64:xxxxxxxx
+DB_DATABASE=bpom_emagang
+DB_USERNAME=root
+DB_PASSWORD=
+FILESYSTEM_DISK=public
+
+4. Generate App Key
+php artisan key:generate
+
+5. Jalankan Migration & Seeder
+php artisan migrate:fresh --seed
+
+
+Seeder akan membuat:
+
+Role Admin, Pembimbing, Mahasiswa
+
+Akun admin default
+
+Divisi contoh
+
+6. Storage Link
+php artisan storage:link
+
+7. Jalankan Server
+php artisan serve
+
+
+API akan berjalan di:
+
+http://localhost:8000/api
+
+🔐 Autentikasi
+
+Semua endpoint (kecuali login, formulir, event public) menggunakan:
+
+Authorization: Bearer {token}
+
+📘 Dokumentasi Endpoint
+
+Tersedia lengkap melalui Postman Collection:
+
+👉 docs/postman_collection.json
+(Tempelkan file Postman export kamu nanti ke repository)
+
+Endpoint utama:
+
+Role	Endpoint	Keterangan
+Public	/formulir	Daftar magang
+Admin	/pembimbing/*	CRUD pembimbing
+Mahasiswa	/mahasiswa/logbook	Upload logbook
+Pembimbing	/pembimbing/logbook	Verifikasi
+Mahasiswa	/mahasiswa/laporan-akhir	Upload laporan
+Pembimbing	/pembimbing/laporan-akhir	Review
+Proyek	/pembimbing/projects	Manage project
+Penilaian	/pembimbing/nilai/*	Input nilai
+Protes nilai	/mahasiswa/nilai/protes	Ajukan protes
+Event	/event	Public list event
+🗂 Struktur Folder Penting
+app/
+ ├─ Http/
+ │   ├─ Controllers/
+ │   │     ├─ AuthController.php
+ │   │     ├─ PembimbingController.php
+ │   │     ├─ LogbookHarianController.php
+ │   │     ├─ LaporanAkhirController.php
+ │   │     ├─ ProjectController.php
+ │   │     ├─ ProjectProgressController.php
+ │   │     ├─ ProjectSubmissionController.php
+ │   │     ├─ PenilaianController.php
+ │   │     └─ EventController.php
+ │   └─ Middleware/
+ ├─ Models/
+ │   ├─ MahasiswaData.php
+ │   ├─ PembimbingData.php
+ │   ├─ LogbookHarian.php
+ │   ├─ LaporanAkhir.php
+ │   ├─ Project.php
+ │   ├─ ProjectMember.php
+ │   ├─ ProjectSubmission.php
+ │   ├─ PenilaianBPOM.php
+ │   ├─ PenilaianKampus.php
+ │   └─ ProtesNilai.php
+
+👥 User Roles
+Admin
+
+CRUD Divisi
+
+CRUD Pembimbing
+
+Melihat seluruh bimbingan
+
+Mengelola event
+
+Pembimbing
+
+Mengelola mahasiswa bimbingan
+
+Verifikasi logbook & laporan akhir
+
+Mengelola project & progres mahasiswa
+
+Input nilai & tanggapi protes
+
+Mahasiswa
+
+Upload logbook
+
+Upload laporan akhir
+
+Kerjakan project + upload progress
+
+Upload final submission
+
+Lihat nilai + ajukan protes
+
+🛠 Development Notes
+
+Semua response menggunakan format JSON clean & konsisten
+
+Validasi ketat pada setiap endpoint
+
+Semua file di-upload ke folder /storage/app/public/...
+
+Sistem absensi otomatis berdasarkan logbook yang diverifikasi
+
+Event otomatis expire dan auto-hide setelah 7 hari
+
+📄 License
+
+Project private untuk pengembangan internal BPOM.
+Tidak digunakan untuk komersial tanpa izin.
